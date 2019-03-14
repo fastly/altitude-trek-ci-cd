@@ -1,0 +1,4 @@
+.google.json
+.terraform
+terraform.*
+secrets.tar

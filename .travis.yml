@@ -1,0 +1,35 @@
+language: minimal
+
+# Only run on master or semver branches
+branches:
+  only:
+    - master
+    - /^v?([0-9]*)\.([0-9]*)\.([0-9]*)$/
+
+# Install terraform
+before_install:
+ - ./install.sh
+
+# Initialise terraform to install provides and refresh state
+install:
+  - terraform init
+  - terraform workspace select staging
+
+# Run terraform plan to validate config
+script:
+  - terraform plan
+
+deploy:
+# Apply changes and deploy to staging env on master
+- provider: script
+  script: terraform apply -auto-approve
+  on:
+    branch: master
+  skip_cleanup: true
+# Apply changes and deploy to staging env on semver tag
+- provider: script
+  script: terraform workspace select prod && terraform apply -auto-approve
+  on:
+    tags: true
+    condition: $TRAVIS_TAG =~ ^v?([0-9]*)\.([0-9]*)\.([0-9]*)$
+  skip_cleanup: true
