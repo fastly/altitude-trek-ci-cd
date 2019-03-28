@@ -65,7 +65,7 @@ resource "fastly_service_v1" "website" {
     ssl_cert_hostname     = "storage.googleapis.com"
     use_ssl               = true
     port                  = 443
-    first_byte_timeout    = 1000
+    first_byte_timeout    = 2000
     max_conn              = 200
     between_bytes_timeout = 1000
   }
